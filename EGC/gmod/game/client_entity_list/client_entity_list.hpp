@@ -15,5 +15,11 @@ namespace egc::game::entity_list
 			auto func_addr = egc::virtual_functions::get_virtual_function(reinterpret_cast<std::uintptr_t*>(this), 3);
 			return reinterpret_cast<egc::game::client_entity::base_entity*(__thiscall*)(void*, std::uint16_t)>(func_addr)(this, entity_number);
 		}
+
+		std::uint32_t get_highest_entity_index()
+		{
+			auto func_addr = egc::virtual_functions::get_virtual_function(reinterpret_cast<std::uintptr_t*>(this), 6);
+			return reinterpret_cast<std::uint32_t(__thiscall*)(void*)>(func_addr)(this);
+		}
 	};
 }

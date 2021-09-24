@@ -10,6 +10,11 @@
 
 void draw_esp(egc::game::client_entity::base_entity* plr)
 {
+	const auto entity_class = plr->get_client_class()->class_id;
+
+	if (entity_class != egc::game::client_entity::class_ids::gmod_player && entity_class != egc::game::client_entity::class_ids::base_npc)
+		return;
+
 	std::uint32_t w, h;
 
 	w = egc::renderer::get_w();
@@ -78,7 +83,14 @@ void egc::features::visuals::callback()
 	{
 		ImDrawList* draw_list = ImGui::GetBackgroundDrawList();
 
-		for (auto i = 0u; i < egc::interfaces::gmod::engine->get_max_clients(); ++i)
+		auto entity_index = 0;
+
+		if (esp_draw_over_npcs)
+			entity_index = egc::interfaces::gmod::entity_list->get_highest_entity_index();
+		else
+			entity_index = egc::interfaces::gmod::engine->get_max_clients();
+
+		for (auto i = 0u; i < entity_index; ++i)
 		{
 			const auto entity = egc::interfaces::gmod::entity_list->get_client_entity(i);
 

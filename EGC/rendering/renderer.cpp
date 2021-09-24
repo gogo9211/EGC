@@ -15,6 +15,7 @@ bool render_interface = false;
 bool window_selected = true;
 
 bool esp_enabled = false;
+bool esp_draw_over_npcs = false;
 bool esp_box = false;
 bool esp_tracers = false;
 
@@ -113,6 +114,8 @@ HRESULT __stdcall present_hook(IDirect3DDevice9* device, const RECT* pSourceRect
 
 				if (esp_enabled)
 				{
+					ImGui::Checkbox("NPC", &esp_draw_over_npcs);
+
 					ImGui::Checkbox("Box", &esp_box);
 
 					ImGui::Checkbox("Tracers", &esp_tracers);

@@ -19,6 +19,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 extern bool render_interface;
 
 extern bool esp_enabled;
+extern bool esp_draw_over_npcs;
 extern bool esp_box;
 extern bool esp_tracers;
 

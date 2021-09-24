@@ -17,12 +17,38 @@ namespace egc::game::client_entity
 		virtual const vector& obb_maxs() = 0;
 	};
 
+	enum class class_ids : std::uint8_t
+	{
+		gmod_player = 70,
+		base_npc = 1
+	};
+
+	struct client_class
+	{
+		std::uintptr_t create_fn;
+		std::uintptr_t create_event_fn;
+		std::uintptr_t network_name;
+		std::uintptr_t recv_table;
+		client_class* next_class;
+		class_ids class_id;
+	};
+
 	struct base_entity
 	{
+		//8 = IClientNetworkable
+	    //4 = IClientRenderable
+	    //0 = C_Base* 
+
 		__forceinline collideable* get_collideable()
 		{
 			auto func_addr = egc::virtual_functions::get_virtual_function(reinterpret_cast<std::uintptr_t*>(this), 3);
 			return reinterpret_cast<collideable*(__thiscall*)(void*)>(func_addr)(this);
+		}
+
+		__forceinline client_class* get_client_class()
+		{
+			auto func_addr = egc::virtual_functions::get_virtual_function(reinterpret_cast<std::uintptr_t*>(this + 8), 2);
+			return reinterpret_cast<client_class*(__thiscall*)(void*)>(func_addr)(this + 8);
 		}
 
 		__forceinline vector get_origin()
