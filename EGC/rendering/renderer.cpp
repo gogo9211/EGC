@@ -9,11 +9,14 @@
 
 #include "../imgui/TextEditor.h"
 
-
 std::once_flag is_init;
 
 bool render_interface = false;
 bool window_selected = true;
+
+bool esp_enabled = false;
+bool esp_box = false;
+bool esp_tracers = false;
 
 std::uint32_t s_w, s_h;
 
@@ -52,6 +55,8 @@ LRESULT __stdcall wnd_proc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 	return CallWindowProcA(original_wnd_proc, hWnd, uMsg, wParam, lParam);
 }
+
+std::uint16_t tab_index = 0;
 
 HRESULT __stdcall present_hook(IDirect3DDevice9* device, const RECT* pSourceRect, const RECT* pDestRect, HWND hDestWindowOverride, const RGNDATA* pDirtyRegion)
 {
@@ -92,17 +97,42 @@ HRESULT __stdcall present_hook(IDirect3DDevice9* device, const RECT* pSourceRect
 	{
 		if (ImGui::Begin("EGC", reinterpret_cast<bool*>(0), ImGuiWindowFlags_NoCollapse))
 		{
-			editor.Render("ScriptBox", { 300.f, 200.f });
-
-			ImGui::Spacing();
-
-			if (ImGui::Button("Execute", { 70, 20 }))
-				egc::features::executor::execute(editor.GetText());
+			if (ImGui::Button("Visuals", { 65, 18 }))
+				tab_index = 0;
 
 			ImGui::SameLine();
 
-			if (ImGui::Button("Clear", { 70, 20 }))
-				editor.SetText("");
+			if (ImGui::Button("Executor", { 65, 18 }))
+				tab_index = 1;
+
+			ImGui::Spacing();
+			
+			if (tab_index == 0)
+			{
+				ImGui::Checkbox("ESP", &esp_enabled);
+
+				if (esp_enabled)
+				{
+					ImGui::Checkbox("Box", &esp_box);
+
+					ImGui::Checkbox("Tracers", &esp_tracers);
+				}
+			}
+
+			if (tab_index == 1)
+			{
+				editor.Render("ScriptBox", { 300.f, 200.f });
+
+				ImGui::Spacing();
+
+				if (ImGui::Button("Execute", { 70, 20 }))
+					egc::features::executor::execute(editor.GetText());
+
+				ImGui::SameLine();
+
+				if (ImGui::Button("Clear", { 70, 20 }))
+					editor.SetText("");
+			}
 		}
 
 		ImGui::End();

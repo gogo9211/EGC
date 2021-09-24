@@ -86,6 +86,10 @@ public:
 		return rhs * lhs;
 	}
 
+	float& operator[](int i) const
+	{
+		return ((float*)this)[i];
+	}
 
 	bool IsNan()
 	{
